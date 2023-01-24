@@ -8,7 +8,7 @@ import {
 
 const ContactItem = ({ contact: { id, name, number }, deleteContact }) => {
   return (
-    <StyledItemContacts key={id}>
+    <StyledItemContacts>
       <StyledTextContacts>
         {name}: {number}
       </StyledTextContacts>

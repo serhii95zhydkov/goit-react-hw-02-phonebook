@@ -12,22 +12,31 @@ class App extends Component {
   };
 
   formSubmitHandler = ({ name, number }) => {
-    const { contacts } = this.state;
-
-    if (contacts.find(contact => contact.name === name)) {
-      return alert(`${name} is already in contacts.`);
+    if (this.isDublicate(name)) {
+      alert(`${name} is already in contacts.`);
+      return false;
     }
 
-    const newContact = {
-      id: nanoid(),
-      name,
-      number,
-    };
-
-    this.setState(({ contacts }) => ({
-      contacts: [...contacts, newContact],
-    }));
+    this.setState(prevState => {
+      const { contacts } = prevState;
+      const newContact = {
+        id: nanoid(),
+        name,
+        number,
+      };
+      return { contacts: [newContact, ...contacts] };
+    });
+    return true;
   };
+
+  isDublicate(contactName) {
+    const normalizingName = contactName.toLowerCase();
+    const { contacts } = this.state;
+    const result = contacts.find(({ name }) => {
+      return name.toLowerCase() === normalizingName;
+    });
+    return Boolean(result);
+  }
 
   getContacts() {
     const { contacts, filter } = this.state;

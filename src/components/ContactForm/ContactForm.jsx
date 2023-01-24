@@ -1,6 +1,5 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { nanoid } from 'nanoid';
 
 import {
   StyledContactForm,
@@ -15,9 +14,6 @@ class ContactForm extends Component {
     number: '',
   };
 
-  nameInputId = nanoid();
-  numberInputId = nanoid();
-
   handleChange = event => {
     const { name, value } = event.currentTarget;
     this.setState({ [name]: value });
@@ -25,8 +21,11 @@ class ContactForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    this.props.onSubmit(this.state);
-    this.reset();
+    const { onSubmit } = this.props;
+    const result = onSubmit({ ...this.state });
+    if (result) {
+      this.reset();
+    }
   };
 
   reset = () => {
@@ -38,10 +37,9 @@ class ContactForm extends Component {
 
     return (
       <StyledContactForm onSubmit={this.handleSubmit}>
-        <StyledLabelForm htmlFor={this.nameInputId}>
+        <StyledLabelForm>
           Name
           <StyledInputForm
-            id={this.nameInputId}
             type="text"
             name="name"
             value={name}
@@ -51,10 +49,9 @@ class ContactForm extends Component {
             required
           />
         </StyledLabelForm>
-        <StyledLabelForm htmlFor={this.numberInputId}>
+        <StyledLabelForm>
           Number
           <StyledInputForm
-            id={this.numberInputId}
             type="tel"
             name="number"
             value={number}
